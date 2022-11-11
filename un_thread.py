@@ -128,7 +128,7 @@ def main():
     finish = input("\nPress 'Enter' to close this window.")
 
 def external(md_b, p, allowance, pd_bsc, pd_tol):
-    # Computations for external threads
+    # Computations for external thread dimensions
     maj_max = round(md_b - allowance, 6) # because MD on ext thread follows PD allowance offset
     maj_min = round(md_b - allowance - (.060 * (p**2)**(1/3)), 6) # Per 5.8.1-b-2
 

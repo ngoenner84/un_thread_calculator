@@ -10,7 +10,7 @@ os.system('mode con: cols=135 lines=40')
 def main():
     print(f"UN Thread Plating Adjuster - Version 1.00\nReport any bugs or errors to Nick Goenner\nCompiled: 11/11/2022\n")
     print(f"*** IMPORTANT NOTES ***:")
-    print("\nThis program calculates UN threads per ASME B1.1 formulaicly and adjusts machining dimensions to accomodate plating thickness.\n")
+    print("\nThis program formulaicly calculates UN thread dimensions per ASME B1.1 and calculates adjustment to machine dimensions to accomodate plating thickness.\n")
     print(f"1. Pre-plate thread adjustments from this program conform to ASME B1.1 - 2003 recommendations.")
     print(f"2. This calculator is only valid for Class 2 threads with a 60° flank angle.")
     print(f"\n**********************************************************************************************\nPrior to creating or updating any drawing requiring pre-plate dimensions, check the gauge list in Thrive to \nverify that no gauge or suitable alternative exists. If a gauge exists, its dimensions should be adopted on\nthe drawing whenever possible to avoid uneccessary duplication.\n**********************************************************************************************\n")

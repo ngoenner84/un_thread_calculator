@@ -8,7 +8,7 @@ os.system('mode con: cols=135 lines=40')
 # This file can be exported to a windows executable by running "python -m auto_py_to_exe" in the terminal.
 
 def main():
-    print(f"UN Thread Plating Adjuster - Version 1.00\nReport any bugs or errors to Nick Goenner\nCompiled: 11/11/2022\n")
+    print(f"UN Thread Plating Adjuster - Version 1.10\nReport any bugs or errors to Nick Goenner\nCompiled: 11/11/2022\n")
     print(f"*** IMPORTANT NOTES ***:")
     print("\nThis program formulaicly calculates UN thread dimensions per ASME B1.1 and calculates adjustment to machine dimensions to accomodate plating thickness.\n")
     print(f"1. Pre-plate thread adjustments from this program conform to ASME B1.1 - 2003 recommendations.")

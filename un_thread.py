@@ -13,22 +13,54 @@ def main():
     print("\nThis program formulaicly calculates UN thread dimensions per ASME B1.1 and calculates adjustment to machine dimensions to accomodate plating thickness.\n")
     print(f"1. Pre-plate thread adjustments from this program conform to ASME B1.1 - 2003 recommendations.")
     print(f"2. This calculator is only valid for Class 2 threads with a 60° flank angle.")
+    print(f"3. Major Ø of internal thread and Minor Ø of external thread are dependent on thread profile and provided for reference only.")
     print(f"\n**********************************************************************************************\nPrior to creating or updating any drawing requiring pre-plate dimensions, check the gauge list in Thrive to \nverify that no gauge or suitable alternative exists. If a gauge exists, its dimensions should be adopted on\nthe drawing whenever possible to avoid uneccessary duplication.\n**********************************************************************************************\n")
+
+    ref_to_md = {'#0': .060, '#1': .073, '#2': .086, '#3': .099, '#4': .112, '#5': .125, '#6': .138, '#8': .164, '#10': .190, '#12': .216}
 
     # Collect thread size from user, verify postive fractional or numerical value.
     while True:
-        md_b_frac = input("Enter basic major Ø of thread (i.e. enter '.3125' or '5/16' for 5/16-18 UNC thread): ")
-        if md_b_frac == '':
+        md_basic_input = input("Enter basic major Ø of thread (i.e. enter '#10', '.3125', '1-5/16' or similar format): ")
+
+        # Make sure input is not blank
+        if md_basic_input == '':
             print("Entry must not be blank.")
         else:
-            try:
-                if float(Fraction(md_b_frac)) > 0: 
-                    md_b = float(Fraction(md_b_frac))           
-                    break
+            md_basic_input = md_basic_input.strip()
+
+            # Check for numbered thread entry i.e "#4-40" or "#10-32", convert to float if found.
+            if md_basic_input[0] == '#':
+                if len(md_basic_input) in [2, 3]:
+                    try:
+                        md_b = ref_to_md[md_basic_input]
+                        break
+                    except:
+                        print("Failed to process 'numbered' thread entry. Please try again.")
                 else:
-                    print("Negative values are not allowed.")
-            except:
-                print("Please read the instructions and double-check your entry.")
+                    print("Invalid 'numbered' thread size. Please review examples and try again.")
+
+            else:
+                # Check for fractional entry in excess of 1 inch, convert to float if found.
+                check = md_basic_input.split('-')
+                if len(check) == 2:
+                    try:
+                        md_b = (float(check[0]) + float(Fraction(check[1])))
+                        break
+                    except:
+                        print('Failed to process fractional entry greater than 1". Please try again.')
+                
+                # Assume input is float, or fractional less than 1 inch
+                elif len(check) == 1:
+                    try:
+                        if float(Fraction(md_basic_input)) > 0: 
+                            md_b = float(Fraction(md_basic_input))           
+                            break
+                        else:
+                            print("Negative values are not allowed.")
+                    except:
+                        print("Failed to process, please check entry and try again.")
+                else:
+                    print("Could not interpret input. Please try with less dashes.")
 
     # Collect TPI from user, verify positive numerical value.
     while True:

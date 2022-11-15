@@ -8,7 +8,7 @@ os.system('mode con: cols=135 lines=40')
 # This file can be exported to a windows executable by running "python -m auto_py_to_exe" in the terminal.
 
 def main():
-    print(f"UN Thread Plating Adjuster - Version 1.10\nReport any bugs or errors to Nick Goenner\nCompiled: 11/11/2022\n")
+    print(f"UN Thread Plating Adjuster - Version 1.11\nReport any bugs or errors to Nick Goenner\nCompiled: 11/11/2022\n")
     print(f"*** IMPORTANT NOTES ***:")
     print("\nThis program formulaicly calculates UN thread dimensions per ASME B1.1 and calculates adjustment to machine dimensions to accomodate plating thickness.\n")
     print(f"1. Pre-plate thread adjustments from this program conform to ASME B1.1 - 2003 recommendations.")
@@ -79,7 +79,7 @@ def main():
     
     # Collect thread series from user, verify that it is one of the accepted types.
     while True:
-        series = input("Enter thread series (ONLY: 'UN' 'UNC' 'UNF' 'UNS' 'UNEF': ").upper()
+        series = input("Enter thread series (ONLY: 'UN' 'UNC' 'UNF' 'UNS' 'UNEF'): ").upper()
         if series in ['UN', 'UNC', 'UNF', 'UNS', 'UNEF']:
             break
         else:
@@ -141,11 +141,15 @@ def main():
     # Executes appropriate thread dimension function depending on internal/external per users input
     if type == 'I':
         maj_max, maj_min, pd_max, pd_min, mnr_max, mnr_min = internal(md_b, p, pd_tol, pd_bsc)
+        if md_b > .125: # Series #0 - #5 thread minor diameters are rounded to 4 decimal places in ASME B1.1 tables.
+            mnr_max = round(mnr_max, 3) # Class 2A minor Ø threads are rounded to 3 decimal places per convention in ASME B1.1 tables.
+            mnr_min = round(mnr_min, 3) # Class 2A minor Ø threads are rounded to 3 decimal places per convention in ASME B1.1 tables.
     elif type == 'E':
         maj_max, maj_min, pd_max, pd_min, mnr_max, mnr_min = external(md_b, p, allowance, pd_bsc, pd_tol)
     else:
         print("Invalid entry for internal/external thread")
         exit()
+
 
     # Adjusts the calculated thread dimensions for plating
     p_maj_max, p_maj_min, p_pd_max, p_pd_min, p_mnr_max, p_mnr_min = plt_adj(maj_max, maj_min, pd_max, pd_min, mnr_max, mnr_min, t_max, t_min, type)
@@ -191,8 +195,8 @@ def internal(md_b, p, pd_tol, pd_bsc):
     else:
         print("No tolerance adjustment.")
 
-    mnr_min = round(md_b - (2 * .54126588 * p), 6)
-    mnr_max = round(mnr_min + mnr_tol, 6)
+    mnr_min = round(md_b - (2 * .54126588 * p), 6) # Calculation per standard requires decimal to 6 places. Affects calculation for mnr_max.
+    mnr_max = round(mnr_min + mnr_tol, 6) # Calculation per standard requires decimal to 6 places. Affects calculation for mnr_max.
 
     return(maj_max, maj_min, pd_max, pd_min, mnr_max, mnr_min)
 

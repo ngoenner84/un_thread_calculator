@@ -4,6 +4,7 @@ This program calculates Major Diameter, Pitch Diameter, and Minor diameter for A
 The program currently only works for Unified National thread series, Class 2, with 60° flank angle.
 
 The program runs in a console window and prompts the user for the following information:  
+
   Basic thread size (nominal major diameter of male thread, for example, 1/2")  
   Thread pitch (TPI)  
   Thread series (for example UN, UNC, UNF, etc.)  
@@ -16,7 +17,8 @@ The program has been audited against a cross-section of threads specified in the
 
 The source code is provided in Python but a Windows Executable is provided as well for non-programmers.
 
-Desired future improvements:
+# Desired future improvements:
+
   Add functionality for metric threads
   Improver user experience with a GUI
   Create executable versions for Mac and Linux 

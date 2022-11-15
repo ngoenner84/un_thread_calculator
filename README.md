@@ -19,6 +19,6 @@ The source code is provided in Python but a Windows Executable is provided as we
 
 # Desired future improvements:
 
-  Add functionality for metric threads
-  Improver user experience with a GUI
-  Create executable versions for Mac and Linux 
+  Add functionality for metric threads  
+  Improver user experience with a GUI  
+  Create executable versions for Mac and Linux   

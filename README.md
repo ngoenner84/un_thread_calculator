@@ -1,6 +1,8 @@
 # un_thread_calculator
 This program calculates Major Diameter, Pitch Diameter, and Minor diameter for ANSI/ASME/UN-series threads according to ASME B1.1 thread standard.
 
+The benefits are twofold: Eliminate the need to reach for and page through the Machinery's Handbook or the ASME B1.1 thread standard, and easily compute the modified thread dimensions to account for user defined plating thickness.
+
 The program currently only works for Unified National thread series, Class 2, with 60° flank angle.
 
 The program runs in a console window and prompts the user for the following information:  

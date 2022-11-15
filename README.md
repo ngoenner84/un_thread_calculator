@@ -3,12 +3,12 @@ This program calculates Major Diameter, Pitch Diameter, and Minor diameter for A
 
 The program currently only works for Unified National thread series, Class 2, with 60° flank angle.
 
-The program runs in a console window and prompts the user for the following information:\n
-  Basic thread size (nominal major diameter of male thread, for example, 1/2")\n
-  Thread pitch (TPI)\n
-  Thread series (for example UN, UNC, UNF, etc.)\n
-  Plating thickness to adjust machine dimensions for, if desired\n
-  Internal or External Thread\n
+The program runs in a console window and prompts the user for the following information:  
+  Basic thread size (nominal major diameter of male thread, for example, 1/2")  
+  Thread pitch (TPI)  
+  Thread series (for example UN, UNC, UNF, etc.)  
+  Plating thickness to adjust machine dimensions for, if desired  
+  Internal or External Thread  
   
 The program will output the "Textbook" machining dimensions as well as a modified set of dimensions that account for plating thickness according to the ASME B1.1 standard.
 

@@ -1,0 +1,294 @@
+{% extends 'base.html' %}
+
+{% block title %}UN Thread Calculator - Engineering Tools{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="{{ url_for('un_thread.static', filename='un_thread/style.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="un-thread-header">
+    <div class="header-content">
+        <h1><i class="fas fa-screw"></i> UN Thread Calculator</h1>
+        <p class="subtitle">ASME B1.1 Thread Dimension Calculator with Plating Adjustment</p>
+        <p class="sub-note"><strong>Class 2 Threads</strong> • 60° Flank Angle • Pre-plate Dimensions</p>
+    </div>
+</div>
+
+<div class="calculator-container">
+    <div class="calculator-main">
+        <!-- Info Banner -->
+        <div class="info-banner">
+            <div class="info-icon">ℹ️</div>
+            <div class="info-text">
+                <strong>Class 2 Threads Only</strong> • Calculates pre-plate dimensions per ASME B1.1-2003
+            </div>
+        </div>
+        <div class="info-banner disclaimer-banner">
+            <div class="info-icon">⚠️</div>
+            <div class="info-text">
+                <strong>Disclaimer:</strong> Plating adjustment values are formulaic per ASME B1.1. Users are responsible for verifying output values and confirming suitability for the application.
+            </div>
+        </div>
+        <div class="info-banner instruction-banner">
+            <div class="info-icon">ℹ️</div>
+            <div class="info-text">
+                <strong>How to Use This Tool</strong> • Enter the basic major diameter, TPI, series, thread type, and plating thickness to calculate pre-plate dimensions. 
+                Results include ASME B1.1 standard dimensions and adjusted pre-plate dimensions. 
+                Check the provided ASME B1.1 reference values against a trusted source to confirm accuracy before use.
+            </div>
+        </div>
+
+        <form id="calculatorForm" class="form-section">
+            <div class="form-group full-width">
+                <label for="majorDiameter">
+                    <i class="fas fa-ruler-horizontal"></i>
+                    Basic Major Diameter <span class="required">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="majorDiameter" 
+                    name="majorDiameter" 
+                    placeholder="e.g., #10, 0.3125, 1-5/16"
+                    required
+                    autocomplete="off"
+                >
+                <small>Enter numbered thread (#0-#12), decimal, or fractional</small>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="tpi">
+                        <i class="fas fa-compress"></i>
+                        TPI <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="tpi" 
+                        name="tpi" 
+                        placeholder="24"
+                        step="0.1"
+                        min="1"
+                        required
+                    >
+                    <small>Threads per inch</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="series">
+                        <i class="fas fa-circle"></i>
+                        Series <span class="required">*</span>
+                    </label>
+                    <select id="series" name="series" required>
+                        <option value="">Select Series</option>
+                        <option value="UNC">UNC (Coarse)</option>
+                        <option value="UNF">UNF (Fine)</option>
+                        <option value="UN">UN</option>
+                        <option value="UNS">UNS</option>
+                        <option value="UNEF">UNEF (Extra Fine)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="threadType">
+                        <i class="fas fa-check-circle"></i>
+                        Type <span class="required">*</span>
+                    </label>
+                    <select id="threadType" name="threadType" required>
+                        <option value="">Select Type</option>
+                        <option value="E">External</option>
+                        <option value="I">Internal</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="minPlating">
+                        <i class="fas fa-layer-group"></i>
+                        Min Plate (in) <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="minPlating" 
+                        name="minPlating" 
+                        placeholder="0.0002"
+                        step="0.0001"
+                        min="0"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="maxPlating">
+                        <i class="fas fa-layer-group"></i>
+                        Max Plate (in) <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="maxPlating" 
+                        name="maxPlating" 
+                        placeholder="0.0004"
+                        step="0.0001"
+                        min="0"
+                        required
+                    >
+                </div>
+            </div>
+
+            <button type="submit" class="btn-calculate">
+                <i class="fas fa-calculator"></i>
+                Calculate Dimensions
+            </button>
+        </form>
+
+        <div id="errorMessage" class="error-message" style="display: none;">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorText"></span>
+        </div>
+
+        <div id="results" class="results-section" style="display: none;">
+            <div class="results-content">
+                <div class="results-header">
+                    <h2><i class="fas fa-chart-bar"></i> Results</h2>
+                    <button type="button" class="btn-new-calc" onclick="resetForm()">
+                        <i class="fas fa-redo"></i> New Calculation
+                    </button>
+                </div>
+                
+                <div class="results-grid">
+                    <!-- ASME B1.1 Results -->
+                    <div class="result-card">
+                        <h3>ASME B1.1 Standard</h3>
+                        <div class="dimension-row">
+                            <div class="dimension">
+                                <span class="dimension-label">Major Ø (Max)</span>
+                                <span class="dimension-value" id="asme-maj-max">-</span>
+                            </div>
+                            <div class="dimension">
+                                <span class="dimension-label">Major Ø (Min)</span>
+                                <span class="dimension-value" id="asme-maj-min">-</span>
+                            </div>
+                        </div>
+                        <div class="dimension-row">
+                            <div class="dimension">
+                                <span class="dimension-label">Pitch Ø (Max)</span>
+                                <span class="dimension-value" id="asme-pitch-max">-</span>
+                            </div>
+                            <div class="dimension">
+                                <span class="dimension-label">Pitch Ø (Min)</span>
+                                <span class="dimension-value" id="asme-pitch-min">-</span>
+                            </div>
+                        </div>
+                        <div class="dimension-row">
+                            <div class="dimension">
+                                <span class="dimension-label">Minor Ø (Max)</span>
+                                <span class="dimension-value" id="asme-minor-max">-</span>
+                            </div>
+                            <div class="dimension">
+                                <span class="dimension-label">Minor Ø (Min)</span>
+                                <span class="dimension-value" id="asme-minor-min">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pre-Plate Results -->
+                    <div class="result-card highlight">
+                        <h3>Pre-Plate Dimensions</h3>
+                        <div class="dimension-row">
+                            <div class="dimension">
+                                <span class="dimension-label">Major Ø (Max)</span>
+                                <span class="dimension-value" id="plate-maj-max">-</span>
+                            </div>
+                            <div class="dimension">
+                                <span class="dimension-label">Major Ø (Min)</span>
+                                <span class="dimension-value" id="plate-maj-min">-</span>
+                            </div>
+                        </div>
+                        <div class="dimension-row">
+                            <div class="dimension">
+                                <span class="dimension-label">Pitch Ø (Max)</span>
+                                <span class="dimension-value" id="plate-pitch-max">-</span>
+                            </div>
+                            <div class="dimension">
+                                <span class="dimension-label">Pitch Ø (Min)</span>
+                                <span class="dimension-value" id="plate-pitch-min">-</span>
+                            </div>
+                        </div>
+                        <div class="dimension-row">
+                            <div class="dimension">
+                                <span class="dimension-label">Minor Ø (Max)</span>
+                                <span class="dimension-value" id="plate-minor-max">-</span>
+                            </div>
+                            <div class="dimension">
+                                <span class="dimension-label">Minor Ø (Min)</span>
+                                <span class="dimension-value" id="plate-minor-min">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="callout-grid">
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <h3><i class="fas fa-file-alt"></i> ASME B1.1 Drawing Callout</h3>
+                            <button
+                                type="button"
+                                class="btn-copy-callout"
+                                data-copy-target="asmeDrawingCallout"
+                                data-status-target="asmeCalloutCopyStatus"
+                            >
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <textarea id="asmeDrawingCallout" class="callout-text" rows="5" readonly></textarea>
+                        <p id="asmeCalloutCopyStatus" class="callout-status" aria-live="polite"></p>
+                    </div>
+                    <div class="callout-card">
+                        <div class="callout-header">
+                            <h3><i class="fas fa-file-alt"></i> Pre-Plate Drawing Callout</h3>
+                            <button
+                                type="button"
+                                class="btn-copy-callout"
+                                data-copy-target="prePlateDrawingCallout"
+                                data-status-target="prePlateCalloutCopyStatus"
+                            >
+                                <i class="fas fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <textarea id="prePlateDrawingCallout" class="callout-text" rows="5" readonly></textarea>
+                        <p id="prePlateCalloutCopyStatus" class="callout-status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showResultsTab(tab) {
+        const standardBtn = document.querySelector('.results-tab:nth-child(1)');
+        const platingBtn = document.querySelector('.results-tab:nth-child(2)');
+        const standardResults = document.getElementById('standardResults');
+        const platingResults = document.getElementById('platingResults');
+
+        if (tab === 'standard') {
+            standardBtn.classList.add('active');
+            platingBtn.classList.remove('active');
+            standardResults.style.display = 'block';
+            platingResults.style.display = 'none';
+        } else {
+            standardBtn.classList.remove('active');
+            platingBtn.classList.add('active');
+            standardResults.style.display = 'none';
+            platingResults.style.display = 'block';
+        }
+    }
+</script>
+
+<script src="{{ url_for('un_thread.static', filename='un_thread/script.js') }}"></script>
+{% endblock %}

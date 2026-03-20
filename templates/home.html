@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Engineering Tools - Home{% endblock %}
+
+{% block content %}
+<section class="home-hero">
+    <h1>Tool Library</h1>
+    <p>Professional engineering utilities for design, analysis, and manufacturing calculations.</p>
+</section>
+
+<section class="tool-grid">
+    {% for tool in tools %}
+    <article class="tool-card">
+        <span class="tool-category">
+            <i class="fas fa-cube"></i>
+            {{ tool.category }}
+        </span>
+        <h2>{{ tool.name }}</h2>
+        <p>{{ tool.description }}</p>
+        <a href="/tools/{{ tool.slug }}" class="tool-link">
+            <span>Open Tool</span>
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </article>
+    {% endfor %}
+</section>
+{% endblock %}

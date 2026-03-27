@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block title %}O-ring Gland Calculator - Engineering Tools{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('o_ring_gland.static', filename='o_ring_gland/style.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="oring-header">
+    <div class="oring-header-content">
+        <h1><i class="fas fa-ring"></i> O-ring Gland Calculator</h1>
+        <p class="oring-subtitle">Define bore/shaft and cross-section family, select nearby AS568 dash sizes, then analyze nominal and tolerance range behavior.</p>
+    </div>
+</div>
+
+<div class="oring-layout">
+    <section class="oring-panel">
+        <div class="oring-info">
+            <i class="fas fa-info-circle"></i>
+            <p>Suggestion results use nearest nominal ID and one size up/down. Review against your approved standards list before release.</p>
+        </div>
+
+        <form id="oringForm" class="oring-form">
+            <div class="section-block">
+                <h2>1. Setup & Size Family</h2>
+
+                <div class="oring-grid four-up">
+                    <div class="field">
+                        <label for="unit">Units</label>
+                        <select id="unit" name="unit" required>
+                            <option value="in">Inch (in)</option>
+                            <option value="mm">Metric (mm)</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="sealType">Seal Type</label>
+                        <select id="sealType" name="sealType" required>
+                            <option value="">Select</option>
+                            <option value="piston">Piston Seal</option>
+                            <option value="rod">Rod Seal</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="serviceType">Service Type</label>
+                        <select id="serviceType" name="serviceType" required>
+                            <option value="">Select</option>
+                            <option value="static">Static</option>
+                            <option value="dynamic">Dynamic</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label for="crossSectionFamily">Cross-Section Family</label>
+                        <select id="crossSectionFamily" name="crossSectionFamily" required>
+                            <option value="">Select</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="oring-grid two-up">
+                    <div class="field" id="boreField" style="display:none;">
+                        <label for="boreDiameter">Bore ID</label>
+                        <input id="boreDiameter" name="boreDiameter" type="number" step="0.0001" min="0">
+                        <label for="boreDiameterTol">Bore ID Tol (±)</label>
+                        <input id="boreDiameterTol" name="boreDiameterTol" type="number" step="0.0001" min="0">
+                    </div>
+
+                    <div class="field" id="rodField" style="display:none;">
+                        <label for="rodDiameter">Shaft OD</label>
+                        <input id="rodDiameter" name="rodDiameter" type="number" step="0.0001" min="0">
+                        <label for="rodDiameterTol">Shaft OD Tol (±)</label>
+                        <input id="rodDiameterTol" name="rodDiameterTol" type="number" step="0.0001" min="0">
+                    </div>
+                </div>
+
+                <div class="oring-actions">
+                    <button type="button" id="suggestButton" class="btn-primary">
+                        <i class="fas fa-lightbulb"></i>
+                        Suggest Standard Sizes
+                    </button>
+                </div>
+            </div>
+
+            <div id="suggestionsPanel" class="section-block" style="display:none;">
+                <h2>2. Suggested Standard Sizes</h2>
+                <p class="section-note" id="suggestionNote"></p>
+                <div id="suggestionsList" class="suggestions-list"></div>
+            </div>
+
+            <div class="section-block">
+                <h2>3. Gland Geometry & Tolerances</h2>
+
+                <div class="oring-grid four-up">
+                    <div class="field">
+                        <label for="selectedDash">Selected Dash Size</label>
+                        <input id="selectedDash" name="selectedDash" type="text" readonly>
+                    </div>
+                    <div class="field">
+                        <label for="selectedOringId">Selected O-ring ID</label>
+                        <input id="selectedOringId" name="selectedOringId" type="number" step="0.0001" min="0" required>
+                    </div>
+                    <div class="field">
+                        <label for="selectedOringCs">Selected O-ring CS</label>
+                        <input id="selectedOringCs" name="selectedOringCs" type="number" step="0.0001" min="0" readonly>
+                    </div>
+                    <div class="field">
+                        <label for="oRingCsTol">O-ring CS Tol (±)</label>
+                        <input id="oRingCsTol" name="oRingCsTol" type="number" step="0.0001" min="0" required>
+                    </div>
+                </div>
+
+                <div class="oring-grid four-up">
+                    <div class="field">
+                        <label for="grooveDiameter">Groove Diameter</label>
+                        <input id="grooveDiameter" name="grooveDiameter" type="number" step="0.0001" min="0" required>
+                    </div>
+                    <div class="field">
+                        <label for="grooveDiameterTol">Groove Dia Tol (±)</label>
+                        <input id="grooveDiameterTol" name="grooveDiameterTol" type="number" step="0.0001" min="0" required>
+                    </div>
+                    <div class="field">
+                        <label for="grooveWidth">Groove Width</label>
+                        <input id="grooveWidth" name="grooveWidth" type="number" step="0.0001" min="0" required>
+                    </div>
+                    <div class="field">
+                        <label for="grooveWidthTol">Groove Width Tol (±)</label>
+                        <input id="grooveWidthTol" name="grooveWidthTol" type="number" step="0.0001" min="0" required>
+                    </div>
+                </div>
+
+                <div class="oring-actions">
+                    <button type="submit" id="calcButton" class="btn-primary">
+                        <i class="fas fa-calculator"></i>
+                        Analyze Gland
+                    </button>
+                    <button type="button" id="sampleButton" class="btn-secondary">Load Sample</button>
+                    <button type="button" id="resetButton" class="btn-secondary">Reset</button>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <h2>4. Report Metadata</h2>
+
+                <div class="oring-grid four-up">
+                    <div class="field">
+                        <label for="reportId">Report ID</label>
+                        <input id="reportId" name="reportId" type="text" placeholder="e.g. OR-2026-017">
+                    </div>
+                    <div class="field">
+                        <label for="analyst">Analyst</label>
+                        <input id="analyst" name="analyst" type="text" placeholder="Name">
+                    </div>
+                    <div class="field">
+                        <label for="reportDate">Date</label>
+                        <input id="reportDate" name="reportDate" type="date">
+                    </div>
+                    <div class="field">
+                        <label for="reportImage">Reference Image (optional)</label>
+                        <input id="reportImage" name="reportImage" type="file" accept="image/*">
+                    </div>
+                </div>
+
+                <div class="oring-actions">
+                    <button type="button" id="reportButton" class="btn-secondary">
+                        <i class="fas fa-file-export"></i>
+                        Generate Report
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div id="errorBanner" class="error-banner" style="display:none;"></div>
+    </section>
+
+    <section id="resultsPanel" class="results-panel" style="display:none;">
+        <h2><i class="fas fa-chart-line"></i> Results</h2>
+
+        <div class="result-cards">
+            <article class="result-card">
+                <h3>Nominal Checks</h3>
+                <div class="metric"><span>Radial Gland Depth</span><strong id="radialDepth">-</strong></div>
+                <div class="metric"><span>Squeeze</span><strong id="squeeze">-</strong></div>
+                <div class="metric"><span>Stretch</span><strong id="stretch">-</strong></div>
+                <div class="metric"><span>Gland Fill</span><strong id="fill">-</strong></div>
+            </article>
+
+            <article class="result-card">
+                <h3>Range Checks (Tolerance Stack)</h3>
+                <div class="metric"><span>Squeeze Range</span><strong id="squeezeRange">-</strong></div>
+                <div class="metric"><span>Stretch Range</span><strong id="stretchRange">-</strong></div>
+                <div class="metric"><span>Gland Fill Range</span><strong id="fillRange">-</strong></div>
+            </article>
+
+            <article class="result-card highlight">
+                <h3>Recommended Starting Geometry</h3>
+                <div class="metric"><span>Target Squeeze</span><strong id="targetSqueeze">-</strong></div>
+                <div class="metric"><span>Target Max Fill</span><strong id="targetFill">-</strong></div>
+                <div class="metric"><span>Recommended Depth</span><strong id="recDepth">-</strong></div>
+                <div class="metric"><span>Min Groove Width</span><strong id="recWidth">-</strong></div>
+                <div class="metric"><span>Recommended Groove Dia</span><strong id="recGrooveDia">-</strong></div>
+            </article>
+        </div>
+
+        <article id="warningCard" class="warning-card" style="display:none;">
+            <h3><i class="fas fa-exclamation-triangle"></i> Design Warnings</h3>
+            <ul id="warningList"></ul>
+        </article>
+    </section>
+</div>
+
+<script src="{{ url_for('o_ring_gland.static', filename='o_ring_gland/script.js') }}"></script>
+{% endblock %}

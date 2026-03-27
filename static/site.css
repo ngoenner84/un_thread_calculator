@@ -5,16 +5,16 @@
 }
 
 :root {
-    --primary: #6366f1;
-    --primary-dark: #4f46e5;
-    --primary-light: #818cf8;
-    --secondary: #8b5cf6;
-    --accent: #ec4899;
-    --text-dark: #1f2937;
-    --text-light: #6b7280;
-    --bg: #f9fafb;
-    --bg-light: #f3f4f6;
-    --border: #e5e7eb;
+    --primary: #0f4c81;
+    --primary-dark: #0b3c66;
+    --primary-light: #2f73ad;
+    --secondary: #1d5f84;
+    --accent: #f97316;
+    --text-dark: #16202b;
+    --text-light: #5d6977;
+    --bg: #f4f7fb;
+    --bg-light: #eaf0f6;
+    --border: #d6e0eb;
     --success: #10b981;
     --error: #ef4444;
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -39,7 +39,7 @@ body {
 
 /* Header & Navigation */
 .site-header {
-    background: white;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-sm);
     position: sticky;
@@ -77,8 +77,18 @@ body {
     color: var(--primary-light);
 }
 
-.brand i {
-    font-size: 1.5rem;
+.brand-logo {
+    width: auto;
+    height: 64px;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    background: #ffffff;
+    border: 1px solid #c6d4e2;
+}
+
+.brand-text {
+    letter-spacing: 0.01em;
 }
 
 /* Navigation Menu */
@@ -136,13 +146,29 @@ body {
 
 /* Footer */
 .site-footer {
-    background: white;
+    background: linear-gradient(180deg, #ffffff 0%, #f7faff 100%);
     border-top: 1px solid var(--border);
     margin-top: auto;
     padding: 2rem 0;
     color: var(--text-light);
     font-size: 0.9rem;
     text-align: center;
+}
+
+.footer-brandline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+}
+
+.footer-logo {
+    width: auto;
+    height: 34px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: #ffffff;
 }
 
 /* Hero Section */
@@ -200,7 +226,7 @@ body {
     color: var(--primary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    background: rgba(99, 102, 241, 0.1);
+    background: rgba(15, 76, 129, 0.1);
     padding: 0.5rem 0.75rem;
     border-radius: 6px;
     width: fit-content;
@@ -283,7 +309,7 @@ body {
     }
 
     .nav-link.active {
-        background: rgba(99, 102, 241, 0.1);
+        background: rgba(15, 76, 129, 0.1);
     }
 
     .site-shell-header {
@@ -296,8 +322,8 @@ body {
         gap: 0.5rem;
     }
 
-    .brand i {
-        font-size: 1.3rem;
+    .brand-logo {
+        height: 56px;
     }
 
     .site-shell {
@@ -331,8 +357,8 @@ body {
         font-size: 1rem;
     }
 
-    .brand i {
-        font-size: 1.2rem;
+    .brand-logo {
+        height: 48px;
     }
 
     .home-hero h1 {

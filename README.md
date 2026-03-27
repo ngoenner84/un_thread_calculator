@@ -24,3 +24,31 @@ The source code is provided in Python but a Windows Executable is provided as we
   Add functionality for metric threads  
   Improve user experience with a GUI  
   Create executable versions for Mac and Linux   
+
+## New: O-ring gland CLI (first pass)
+
+A first-pass backend script is available for command-line O-ring gland checks in `tools/o_ring_gland`.
+
+Interactive usage:
+
+```bash
+python -m tools.o_ring_gland.cli --interactive
+```
+
+Argument-based usage example:
+
+```bash
+python -m tools.o_ring_gland.cli \
+  --seal-type piston \
+  --service-type dynamic \
+  --o-ring-id 1.739 \
+  --o-ring-cs 0.139 \
+  --groove-width 0.170 \
+  --bore-diameter 2.000 \
+  --groove-diameter 1.780
+```
+
+## O-ring gland standards and deployment docs
+
+- Gland-depth and squeeze reference table: `docs/o_ring_gland/STANDARDS_REFERENCE.md`
+- DigitalOcean droplet deployment runbook: `DEPLOYMENT.md`

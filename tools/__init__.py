@@ -18,5 +18,12 @@ TOOL_REGISTRY = [
         description="ASME B1.1 Class 2 thread dimensions with plating adjustments.",
         category="Threading",
         blueprint_import="tools.un_thread.routes:bp",
-    )
+    ),
+    ToolDefinition(
+        slug="o-ring-gland-calculator",
+        name="O-ring Gland Calculator",
+        description="First-pass O-ring gland checks for squeeze, stretch, and gland fill.",
+        category="Sealing",
+        blueprint_import="tools.o_ring_gland.routes:bp",
+    ),
 ]

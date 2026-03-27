@@ -1,0 +1,20 @@
+Raw AS568 reference text pasted by user on 2026-03-25.
+
+NOTE:
+- This file is intentionally unstructured for source traceability.
+- Normalized edits should be made in `data/as568/as568_sizes.csv`.
+
+BEGIN RAW
+-001 .029 ± .004 .040 ± .003 1/32 3/32 1/32
+-001 1/2 .070 ± .004 .040 ± .003 1/16 1/8 1/32
+-002 .042 ± .004 .050 ± .003 3/64 9/64 3/64
+-003 .056 ± .004 .060 ± .003 1/16 3/16 1/16
+-004 .070 ± .005 .070 ± .003 5/64 13/64 1/16
+-005 .101 ± .005 .070 ± .003 3/32 7/32 1/16
+-006 .114 ± .005 .070 ± .003 1/8 1/4 1/16
+-007 .145 ± .005 .070 ± .003 5/32 9/32 1/16
+-008 .176 ± .005 .070 ± .003 3/16 5/16 1/16
+-009 .208 ± .005 .070 ± .003 7/32 11/32 1/16
+-010 .239 ± .005 .070 ± .003 1/4 3/8 1/16
+... (truncated in maintained raw file for brevity; full chat message remains system of record)
+END RAW

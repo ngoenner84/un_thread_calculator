@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O-ring Gland Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 24px; color: #111827; }
+        h1 { margin: 0 0 8px 0; }
+        h2 { margin: 20px 0 8px 0; font-size: 1.1rem; }
+        .meta, .grid, .warn { border: 1px solid #d1d5db; border-radius: 8px; padding: 12px; }
+        .meta { background: #f8fafc; display: grid; grid-template-columns: repeat(2, minmax(220px, 1fr)); gap: 8px 16px; }
+        .row { display: grid; grid-template-columns: 220px 1fr; gap: 8px; padding: 4px 0; border-bottom: 1px dashed #e5e7eb; }
+        .row:last-child { border-bottom: none; }
+        .label { color: #475569; }
+        .value { font-weight: 600; }
+        .grid { margin-top: 12px; }
+        .warn { background: #fff7ed; border-color: #fdba74; }
+        .warn li { margin-bottom: 6px; }
+        .img-wrap { margin-top: 14px; }
+        .img-wrap img { max-width: 100%; max-height: 420px; border: 1px solid #cbd5e1; border-radius: 8px; }
+        .muted { color: #64748b; font-size: 0.9rem; }
+        @media print { body { margin: 12mm; } }
+    </style>
+</head>
+<body>
+    <h1>O-ring Gland Design Report</h1>
+    <p class="muted">Generated {{ meta.generated_utc }} (UTC)</p>
+
+    <section class="meta">
+        <div><strong>Report ID:</strong> {{ meta.report_id or 'N/A' }}</div>
+        <div><strong>Analyst:</strong> {{ meta.analyst or 'N/A' }}</div>
+        <div><strong>Report Date:</strong> {{ meta.report_date or 'N/A' }}</div>
+        <div><strong>Units:</strong> {{ unit }}</div>
+    </section>
+
+    <h2>Inputs</h2>
+    <section class="grid">
+        {% for key, value in inputs.items() %}
+        <div class="row">
+            <div class="label">{{ key }}</div>
+            <div class="value">{{ value }}</div>
+        </div>
+        {% endfor %}
+    </section>
+
+    <h2>Suggested Sizes</h2>
+    <section class="grid">
+        {% if suggestions %}
+            {% for item in suggestions %}
+            <div class="row">
+                <div class="label">{{ item.dash_size }}</div>
+                <div class="value">ID {{ item.nominal_id }} | CS {{ item.cross_section }} | Stretch {{ item.predicted_stretch_percent }}%</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="row"><div class="label">Suggestions</div><div class="value">N/A</div></div>
+        {% endif %}
+    </section>
+
+    <h2>Results</h2>
+    <section class="grid">
+        {% for key, value in results.items() if key != 'warnings' %}
+        <div class="row">
+            <div class="label">{{ key }}</div>
+            <div class="value">{{ value }}</div>
+        </div>
+        {% endfor %}
+    </section>
+
+    <h2>Warnings</h2>
+    <section class="warn">
+        {% if results.warnings %}
+        <ul>
+            {% for warning in results.warnings %}
+            <li>{{ warning }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div>No warnings.</div>
+        {% endif %}
+    </section>
+
+    {% if image_data_url %}
+    <h2>Reference Image</h2>
+    <div class="img-wrap">
+        <img src="{{ image_data_url }}" alt="Report reference image">
+    </div>
+    {% endif %}
+</body>
+</html>
